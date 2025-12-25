@@ -133,32 +133,45 @@ def usun_wiersze_opisowe(datasets: dict, verbose: bool = True) -> dict:
 
     return cleaned
 
-#duplikaty kolumn - po zmianie nazw kolumn mogłoby sie zdarzyć, że dwie różne stare nazwy dostaną ten sam nowy kod (np. stacja miała kilka historycznych nazw). Wtedy w DataFrame powstaną dwie kolumny o tej samej nazwie (warto na wszelki wypadek sprawdzić, czy nie ma duplikatów) - ja sprawdziłam i nie ma
+#w razie gdyby jedna komórka zawierała 2 stare kody wprowadziłam poprawkę
 def build_old2new(dfmeta_raw: pd.DataFrame) -> dict:
-    # w metadanych pierwszy wiersz to nazwy kolumn (wyciągamy ten pierwszy wiersz jako nagłówki, wycinamy go z danych i resetujemy indeks) teraz m będzie miało poprawne nazwy kolumn
     m = dfmeta_raw.copy()
     m.columns = m.iloc[0]
     m = m[1:].reset_index(drop=True)
 
-    # złap nazwy kolumn niezależnie od spacji/enterów
     def pick(col_starts):
         for c in m.columns:
             if str(c).strip().lower().startswith(col_starts):
                 return c
         raise KeyError(f"Brak kolumny zaczynającej się od: {col_starts}")
 
-    col_new = pick("kod stacji")                           # np. "Kod stacji"
-    col_old = pick("stary kod stacji")                     # np. "Stary Kod stacji \n(o ile inny od aktualnego)"
-    #m2 To czysta tabelka 2-kolumnowa: (stary_kod, nowy_kod), bez pustych wierszy, z danymi jako tekst, to na niej tworzony jest słownik
-    m2 = m[[col_old, col_new]].dropna(subset=[col_old, col_new]).astype(str)
+    col_new = pick("kod stacji")
+    col_old = pick("stary kod stacji")
 
-    # usuń spacje z początku i końca tekstu w obu kolumnach
+    m2 = (
+        m[[col_old, col_new]]
+        .dropna(subset=[col_old, col_new])
+        .astype(str)
+    )
+
     m2[col_old] = m2[col_old].str.strip()
     m2[col_new] = m2[col_new].str.strip()
 
-    # stwórz słownik: stary_kod -> nowy_kod
-    d = m2.set_index(col_old)[col_new].to_dict()
-    return d
+    old2new = {}
+
+    for _, row in m2.iterrows():
+        new_code = row[col_new]
+
+        # 👉 rozbij TYLKO po przecinku i spacji
+        old_codes = row[col_old].replace(",", " ").split(" ")
+
+        for old in old_codes:
+            old = old.strip()
+            if old:  # pomiń puste
+                old2new[old] = new_code
+
+    return old2new
+
 def mapuj_kolumny_z_podgladem(df: pd.DataFrame, mapa: dict) -> pd.DataFrame:
     """
     Zmienia nazwy kolumn na podstawie słownika 'mapa' (stary_kod → nowy_kod).
@@ -238,4 +251,5 @@ def dodaj_multiindex(df: pd.DataFrame, mapa_kod_miasto: dict) -> pd.DataFrame:
     df2.columns = pd.MultiIndex.from_tuples(nowe_kolumny,
                                             names=["Miejscowość", "Kod stacji"])
     return df2
+
 
