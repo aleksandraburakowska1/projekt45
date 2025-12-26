@@ -3,21 +3,6 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-
-def filter_cities_years(
-    df: pd.DataFrame,
-    cities: list,
-    years: list
-) -> pd.DataFrame:
-    """
-    Filtruje dane do wizualizacji dla wybranych miast i lat.
-    """
-    return df[
-        df["Miasto"].isin(cities)
-        & df["Rok"].isin(years)
-    ].copy()
-
-
 def plot_monthly_pm25(
     df: pd.DataFrame,
     title: str = "Średnie miesięczne stężenie PM2.5"
