@@ -17,12 +17,5 @@ zadanie 1: Wczytanie i czyszczenie danych
     4. Aktualizacja kodów stacji: W związku ze zmianami kodów stacji na przestrzeni lat: na podstawie metadanych zbudowano słownik mapujący stare kody → nowe kody, uwzględniono przypadki, w których jedna komórka      zawierała kilka starych kodów, kolumny w danych zostały przemianowane na aktualne kody stacji
     5. Konwersja kolumny daty i korekta północy: Kolumna Data została przekonwertowana do typu datetime, pomiary wykonane dokładnie o godzinie 00:00:00 zostały przesunięte o 1 sekundę wstecz, tak aby logicznie        należały do poprzedniego dnia, zgodnie z założeniami zadania.
     6. Połączenie danych z różnych lat: Dane ze wszystkich lat połączono w jeden wspólny DataFrame (concat), zastosowano join="inner", aby pozostawić wyłącznie stacje występujące we wszystkich analizowanych           latach, indeks został zresetowany.
-    7. Dodanie MultiIndex: Na podstawie metadanych zbudowano słownik: kod stacji → miejscowość, a następnie kolumny zostały przekształcone do postaci MultiIndex:
-
-poziom 1: Miejscowość
-
-poziom 2: Kod stacji
-
-kolumna Data została zachowana jako osobna kolumna techniczna.
-
-MultiIndex ułatwia późniejszą agregację danych na poziomie miast.
+    7. Dodanie MultiIndex: Na podstawie metadanych zbudowano słownik: kod stacji → miejscowość, a następnie kolumny zostały przekształcone do postaci MultiIndex, gdzie poziom 1 to miejscowość, a poziom 2 to kod       stacji. MultiIndex ułatwia późniejszą agregację danych na poziomie miast.
+    8. Zapis danych do pliku: Ostateczny, oczyszczony zbiór danych zapisano do pliku: PM25_all_years.csv. Plik ten stanowi punkt wyjścia do dalszych analiz statystycznych i wizualizacji w kolejnych zadaniach.
