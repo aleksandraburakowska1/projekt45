@@ -14,53 +14,10 @@ zadanie 1: Wczytanie i czyszczenie danych
     Pozostawiono wyłącznie: wiersz zawierający informację „Kod stacji” (potrzebny do budowy nagłówków) oraz wiersze z poprawnym znacznikiem czasu.
     3. Ujednolicenie nagłówków kolumn: Wiersz zawierający „Kod stacji” został użyty jako nagłówek kolumn. Pierwsza kolumna została nazwana „Data”, co ujednoliciło format danych we wszystkich latach.
     Dzięki temu każdy DataFrame miał taką samą strukturę: Data + kolumny odpowiadające stacjom pomiarowym.
-
-4. Aktualizacja kodów stacji
-
-W związku ze zmianami kodów stacji na przestrzeni lat:
-
-na podstawie metadanych zbudowano słownik mapujący stare kody → nowe kody,
-
-uwzględniono przypadki, w których jedna komórka zawierała kilka starych kodów,
-
-kolumny w danych zostały przemianowane na aktualne kody stacji,
-
-wypisano informację o wszystkich dokonanych zmianach nazw kolumn.
-
-5. Konwersja kolumny daty i korekta północy
-
-Kolumna Data została przekonwertowana do typu datetime,
-
-pomiary wykonane dokładnie o godzinie 00:00:00 zostały przesunięte o 1 sekundę wstecz, tak aby logicznie należały do poprzedniego dnia, zgodnie z założeniami zadania.
-
-6. Połączenie danych z różnych lat
-
-Dane ze wszystkich lat połączono w jeden wspólny DataFrame (concat),
-
-zastosowano join="inner", aby pozostawić wyłącznie stacje występujące we wszystkich analizowanych latach,
-
-indeks został zresetowany.
-
-7. Dodanie MultiIndex
-
-Na podstawie metadanych zbudowano słownik:
-
-kod stacji
-→
-miejscowo
-s
-ˊ
-c
-ˊ
-kod stacji→miejscowo
-s
-ˊ
-c
-ˊ
-
-Następnie:
-
-kolumny zostały przekształcone do postaci MultiIndex:
+    4. Aktualizacja kodów stacji: W związku ze zmianami kodów stacji na przestrzeni lat: na podstawie metadanych zbudowano słownik mapujący stare kody → nowe kody, uwzględniono przypadki, w których jedna komórka      zawierała kilka starych kodów, kolumny w danych zostały przemianowane na aktualne kody stacji
+    5. Konwersja kolumny daty i korekta północy: Kolumna Data została przekonwertowana do typu datetime, pomiary wykonane dokładnie o godzinie 00:00:00 zostały przesunięte o 1 sekundę wstecz, tak aby logicznie        należały do poprzedniego dnia, zgodnie z założeniami zadania.
+    6. Połączenie danych z różnych lat: Dane ze wszystkich lat połączono w jeden wspólny DataFrame (concat), zastosowano join="inner", aby pozostawić wyłącznie stacje występujące we wszystkich analizowanych           latach, indeks został zresetowany.
+    7. Dodanie MultiIndex: Na podstawie metadanych zbudowano słownik: kod stacji → miejscowość, a następnie kolumny zostały przekształcone do postaci MultiIndex:
 
 poziom 1: Miejscowość
 
