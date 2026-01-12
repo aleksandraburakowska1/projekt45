@@ -1,0 +1,71 @@
+Dokumentacja projektu – analiza PM2.5 (GIOŚ)
+Autorzy: Aleksandra Burakowska, Michał Pszenicyn
+zadanie 1: Wczytanie i czyszczenie danych
+  Cel zadania: 
+    Celem tego etapu było wczytanie godzinowych danych pomiarowych PM2.5 dla lat 2015, 2018, 2021 oraz 2024, ich ujednolicenie oraz przygotowanie do dalszej analizy. 
+    Dane pochodziły z archiwów GIOŚ i różniły się formatem, nazewnictwem kolumn oraz kodami stacji pomiarowych.
+  Źródła danych:
+    Dane pomiarowe PM2.5: archiwa GIOŚ (pliki Excel spakowane w ZIP)
+    Metadane stacji: lokalny plik Excel zawierający aktualne kody stacji oraz przypisane miejscowości  
+  Etapy przetwarzania danych:
+    1. Pobranie danych z archiwów GIOŚ: czyli dla każdego analizowanego roku: pobrano archiwum ZIP z serwera GIOŚ, z archiwum wyodrębniono plik Excel z pomiarami PM2.5,
+    dane wczytano do obiektu DataFrame bez nagłówków (header=None), aby zachować oryginalną strukturę pliku.
+    2. Usunięcie wierszy opisowych: W surowych danych znajdowały się dodatkowe wiersze opisowe (np. „Wskaźnik”, „Jednostka”), które nie stanowiły właściwych pomiarów.
+    Pozostawiono wyłącznie: wiersz zawierający informację „Kod stacji” (potrzebny do budowy nagłówków) oraz wiersze z poprawnym znacznikiem czasu.
+    3. Ujednolicenie nagłówków kolumn: Wiersz zawierający „Kod stacji” został użyty jako nagłówek kolumn. Pierwsza kolumna została nazwana „Data”, co ujednoliciło format danych we wszystkich latach.
+    Dzięki temu każdy DataFrame miał taką samą strukturę: Data + kolumny odpowiadające stacjom pomiarowym.
+
+4. Aktualizacja kodów stacji
+
+W związku ze zmianami kodów stacji na przestrzeni lat:
+
+na podstawie metadanych zbudowano słownik mapujący stare kody → nowe kody,
+
+uwzględniono przypadki, w których jedna komórka zawierała kilka starych kodów,
+
+kolumny w danych zostały przemianowane na aktualne kody stacji,
+
+wypisano informację o wszystkich dokonanych zmianach nazw kolumn.
+
+5. Konwersja kolumny daty i korekta północy
+
+Kolumna Data została przekonwertowana do typu datetime,
+
+pomiary wykonane dokładnie o godzinie 00:00:00 zostały przesunięte o 1 sekundę wstecz, tak aby logicznie należały do poprzedniego dnia, zgodnie z założeniami zadania.
+
+6. Połączenie danych z różnych lat
+
+Dane ze wszystkich lat połączono w jeden wspólny DataFrame (concat),
+
+zastosowano join="inner", aby pozostawić wyłącznie stacje występujące we wszystkich analizowanych latach,
+
+indeks został zresetowany.
+
+7. Dodanie MultiIndex
+
+Na podstawie metadanych zbudowano słownik:
+
+kod stacji
+→
+miejscowo
+s
+ˊ
+c
+ˊ
+kod stacji→miejscowo
+s
+ˊ
+c
+ˊ
+
+Następnie:
+
+kolumny zostały przekształcone do postaci MultiIndex:
+
+poziom 1: Miejscowość
+
+poziom 2: Kod stacji
+
+kolumna Data została zachowana jako osobna kolumna techniczna.
+
+MultiIndex ułatwia późniejszą agregację danych na poziomie miast.
