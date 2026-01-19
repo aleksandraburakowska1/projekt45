@@ -6,16 +6,16 @@ Projekt dotyczy analizy stężenia pyłu PM2.5 na podstawie danych pomiarowych z
 
 ```text
 Maly_projekt3_Ola_i_Michal/
-|-- __pycache__/
 |-- tests/
+| |-- test_io_clean.py
+| |-- test_metrics.py
 |-- Metadane oraz kody stacji i stanowisk pomiarowych.xlsx
 |-- PM25_all_years.csv        # główny zbiór danych
-|-- dokumentacja.txt
 |-- init.py
 |-- io_clean.py               # wczytywanie i czyszczenie danych
 |-- metrics.py                # obliczanie statystyk i norm
 |-- viz.py                    # generowanie wykresów
-|-- projekt_1_student.ipynb   # notatnik główny
+|-- projekt_3.ipynb   # notatnik główny
 |-- requirements.txt
 ```
 

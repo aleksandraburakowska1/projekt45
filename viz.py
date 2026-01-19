@@ -31,6 +31,8 @@ def plot_monthly_pm25(
     plt.legend()
     plt.tight_layout()
     plt.show()
+
+
 def plot_pm25_heatmaps(city_month: pd.DataFrame):
     """
     Heatmapy PM2.5:
@@ -72,34 +74,4 @@ def plot_pm25_heatmaps(city_month: pd.DataFrame):
 
     plt.tight_layout()
     plt.show()
-
-def plot_exceedance_bars(counts: pd.DataFrame, selected_stations, title: str = None):
-    """
-    Wykres słupkowy liczby dni z przekroczeniem (kolumny = lata) dla wybranych stacji.
-    counts: Kod_stacji, Rok, przekracza
-    """
-    plot_df = counts[counts["Kod_stacji"].isin(selected_stations)].copy()
-    pivot = plot_df.pivot(index="Kod_stacji", columns="Rok", values="przekracza").fillna(0)
-
-    fig, ax = plt.subplots(figsize=(10, 6))
-    years = sorted(pivot.columns)
-    x = range(len(pivot.index))
-    bar_width = 0.25
-
-    for i, year in enumerate(years):
-        ax.bar([p + i * bar_width for p in x], pivot[year], width=bar_width, label=str(year))
-
-    ax.set_xticks([p + bar_width for p in x])
-    ax.set_xticklabels(pivot.index, rotation=45, ha="right")
-    ax.set_ylabel("Liczba dni z przekroczeniem")
-    ax.set_xlabel("Stacja")
-    ax.legend(title="Rok")
-    if title:
-        ax.set_title(title)
-
-    plt.tight_layout()
-    plt.show()
-
-    return pivot
-
 

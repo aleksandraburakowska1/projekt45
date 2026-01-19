@@ -4,6 +4,8 @@ import io, os
 import pandas as pd
 
 gios_archive_url = "https://powietrze.gios.gov.pl/pjp/archives/downloadFile/"
+
+
 # funkcja do ściągania podanego archiwum
 def download_gios_archive(year, gios_id, filename):
     # Pobranie archiwum ZIP do pamięci
@@ -24,6 +26,8 @@ def download_gios_archive(year, gios_id, filename):
                 except Exception as e:
                     print(f"Błąd przy wczytywaniu {year}: {e}")
     return df
+
+
 def build_kod2miasto(dfmeta_raw: pd.DataFrame) -> dict:
     meta = dfmeta_raw.copy()
     meta.columns = meta.iloc[0]
@@ -52,8 +56,6 @@ def build_kod2miasto(dfmeta_raw: pd.DataFrame) -> dict:
 
 
 #wprowadzona zmiana względem poprzedniego kodu: wczytuję metadane z pliku excel 
-import pandas as pd
-
 def load_gios_metadata(path: str) -> pd.DataFrame | None:
     """
     Wczytuje metadane GIOŚ z lokalnego pliku Excel.
@@ -72,6 +74,7 @@ def load_gios_metadata(path: str) -> pd.DataFrame | None:
     except Exception as e:
         print(f"Błąd przy wczytywaniu metadanych z pliku '{path}': {e}")
         return None
+
 
 #Zamiana wiersza "Kod stacji" na nagłówek i dodanie kolumny 'Data', żeby ujednolicić format
 #potem zmapuję stare kody stacji na nowe zgodnie z metadanymi
@@ -92,9 +95,8 @@ def use_station_header(df: pd.DataFrame) -> pd.DataFrame:
 
     df2 = df2.rename(columns={df2.columns[0]: "Data"})
 
-
     return df2.reset_index(drop=True)
-import pandas as pd
+
 
 def usun_wiersze_opisowe(datasets: dict, verbose: bool = True) -> dict:
     """
@@ -133,6 +135,7 @@ def usun_wiersze_opisowe(datasets: dict, verbose: bool = True) -> dict:
 
     return cleaned
 
+
 #w razie gdyby jedna komórka zawierała 2 stare kody wprowadziłam poprawkę
 def build_old2new(dfmeta_raw: pd.DataFrame) -> dict:
     m = dfmeta_raw.copy()
@@ -162,7 +165,7 @@ def build_old2new(dfmeta_raw: pd.DataFrame) -> dict:
     for _, row in m2.iterrows():
         new_code = row[col_new]
 
-        # 👉 rozbij TYLKO po przecinku i spacji
+        # rozbij TYLKO po przecinku i spacji
         old_codes = row[col_old].replace(",", " ").split(" ")
 
         for old in old_codes:
@@ -171,6 +174,7 @@ def build_old2new(dfmeta_raw: pd.DataFrame) -> dict:
                 old2new[old] = new_code
 
     return old2new
+
 
 def mapuj_kolumny_z_podgladem(df: pd.DataFrame, mapa: dict) -> pd.DataFrame:
     """
@@ -194,7 +198,9 @@ def mapuj_kolumny_z_podgladem(df: pd.DataFrame, mapa: dict) -> pd.DataFrame:
 
     # faktyczna zmiana nazw kolumn
     return df.rename(columns=lambda c: mapa.get(str(c).strip(), c))
-# --- 1️. Utwórz mapę: kod stacji → miejscowość --
+
+
+# --- 1. Utwórz mapę: kod stacji → miejscowość --
 def build_kod2miasto(dfmeta_raw: pd.DataFrame) -> dict:
     """
     Buduje słownik: kod stacji → miejscowość
@@ -223,11 +229,8 @@ def build_kod2miasto(dfmeta_raw: pd.DataFrame) -> dict:
 
     return kod2miasto
 
-#MultiIndex to po prostu wielopoziomowy indeks — czyli taki, gdzie:
-#każda kolumna (lub wiersz) ma kilka warstw etykiet zamiast jednej.
-# dodaję multiindeks korzystając ze słownika który utworzyłam wcześniej
-import pandas as pd
 
+# dodaję multiindeks korzystając ze słownika który utworzyłam wcześniej
 def dodaj_multiindex(df: pd.DataFrame, mapa_kod_miasto: dict) -> pd.DataFrame:
     """
     Dodaje MultiIndex do kolumn: (Miejscowość, Kod stacji).
@@ -251,5 +254,3 @@ def dodaj_multiindex(df: pd.DataFrame, mapa_kod_miasto: dict) -> pd.DataFrame:
     df2.columns = pd.MultiIndex.from_tuples(nowe_kolumny,
                                             names=["Miejscowość", "Kod stacji"])
     return df2
-
-
