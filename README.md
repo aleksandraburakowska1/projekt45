@@ -1,4 +1,4 @@
-**Analiza danych PM2.5 w Polsce**
+**Analiza PM2.5 w Polsce – pipeline danych środowiskowych i literaturowych**
 
 Projekt dotyczy analizy stężenia pyłu PM2.5 na podstawie danych pomiarowych z różnych stacji w Polsce. W projekcie obliczane są średnie wartości, identyfikowane są dni z przekroczeniem normy oraz tworzone są wykresy porównawcze.
 
