@@ -100,53 +100,20 @@ pip install -r requirements.txt
 ```
 Uruchomienie:
 ```
-pip install -r requirements.txt
+snakemake -s Snakefile_task4 --cores 1 --rerun-triggers checksum
 ```
 
-
-**Zadanie 4 – Przekroczenia normy:**
-- zliczanie dni z przekroczeniem dopuszczalnej wartości i liczby przekroczeń dla wybranych stacji
-- wizualizacja na wykresie i interpretacja
-
-**Wymagania pakietów**
-
-Projekt wykorzystuje następujące biblioteki:
-
-- numpy
-- pandas
-- matplotlib
-- seaborn
-- requests
-- pytest
-- openpyxl
-
-Wymagana jest również nowa wersja Pythona >3.10
-
-Instalacja pakietów:
-```bash
-pip install -r requirements.txt
+**Dlaczego używamy --rerun-triggers checksum?**
+Domyślnie Snakemake sprawdza jedynie czas modyfikacji pliku (mtime).
+Opcja:
 ```
-**Pliki:**
-
-Wymienione poniżej pliki są wczytywane przez plik projekt_1_student.ipynb, zawierają one funkcje potrzebne do realizacji zadań, dzięki takiemu rozwiązaniu kod jest uporządkowany i czytelny.
-- io_clean.py
-- metrics.py
- - viz.py
-
-**Instalacja:**
-- sklonuj repozytorium:
-
-```bash
-git clone https://github.com/aleksandraburakowska1/Maly_projekt3_Ola_i_Michal.git
+--rerun-triggers checksum
 ```
+powoduje, że Snakemake wykrywa zmiany na podstawie zawartości plików, a nie tylko ich daty. Dzięki temu:
+- pipeline nie uruchamia się niepotrzebnie,
+- zmiana danych zawsze wymusza przeliczenie wyników,
+- wyniki są bardziej powtarzalne.
 
-- można zainstalować wirtualne środowisko
-- zainstaluj odpowiednie pakiety
+**Autor:**
 
-**Uruchomienie testów:**
-```bash
-python -m pytest
-```
-**Autorzy:**
-
-Aleksandra Burakowska, Michał Pszenicyn
+Aleksandra Burakowska
