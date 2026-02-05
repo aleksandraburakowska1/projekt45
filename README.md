@@ -5,7 +5,7 @@ Projekt dotyczy analizy stężenia pyłu PM2.5 na podstawie danych pomiarowych z
 **Struktura projektu**
 
 ```text
-Maly_projekt3_Ola_i_Michal/
+Projekt 4/
 |-- tests/
 | |-- test_io_clean.py
 | |-- test_metrics.py
