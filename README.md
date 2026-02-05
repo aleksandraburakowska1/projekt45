@@ -91,9 +91,11 @@ pubmed:
 
 ```
 Zmiana lat lub miast nie wymaga zmiany kodu — wystarczy edycja pliku YAML.
-**Zadanie 3 – Wizualizacja**
-
-Wykonanie heatmap miesięcznych średnich dla miast
+**Uruchomienie pipeline**
+Instalacja zależności:
+```
+pip install -r requirements.txt
+```
 
 **Zadanie 4 – Przekroczenia normy:**
 - zliczanie dni z przekroczeniem dopuszczalnej wartości i liczby przekroczeń dla wybranych stacji
