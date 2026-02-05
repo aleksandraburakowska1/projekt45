@@ -1,47 +1,94 @@
 **Analiza PM2.5 w Polsce – pipeline danych środowiskowych i literaturowych**
 
-Projekt dotyczy analizy stężenia pyłu PM2.5 na podstawie danych pomiarowych z różnych stacji w Polsce. W projekcie obliczane są średnie wartości, identyfikowane są dni z przekroczeniem normy oraz tworzone są wykresy porównawcze.
+Projekt realizuje analizę stężeń pyłu zawieszonego PM2.5 w Polsce oraz łączy ją z analizą publikacji naukowych dotyczących wpływu zanieczyszczeń powietrza na zdrowie.Całość została zautomatyzowana przy pomocy Snakemake, co pozwala łatwo odtwarzać wyniki dla kolejnych lat bez ręcznego przetwarzania danych. Pipeline wykonuje:
+- obliczanie dobowych średnich stężeń PM2.5,
+- zliczanie dni z przekroczeniem norm WHO,
+- pobieranie publikacji z PubMed,
+- tworzenie zestawień literaturowych,
+- generowanie raportu końcowego.
 
 **Struktura projektu**
 
-```text
-Projekt 4/
-|-- tests/
-| |-- test_io_clean.py
-| |-- test_metrics.py
-|-- Metadane oraz kody stacji i stanowisk pomiarowych.xlsx
-|-- PM25_all_years.csv        # główny zbiór danych
-|-- init.py
-|-- io_clean.py               # wczytywanie i czyszczenie danych
-|-- metrics.py                # obliczanie statystyk i norm
-|-- viz.py                    # generowanie wykresów
-|-- projekt_3.ipynb   # notatnik główny
-|-- requirements.txt
+```projekt4/
+├── config/
+│   └── task4.yaml                # konfiguracja pipeline
+│
+├── data/
+│   └── raw/                      # ewentualne dane źródłowe
+│
+├── results/
+│   ├── pm25/{rok}/
+│   │   ├── daily_means.csv
+│   │   └── exceedance_days.csv
+│   │
+│   ├── literature/{rok}/
+│   │   ├── pubmed_papers.csv
+│   │   ├── summary_by_year.csv
+│   │   └── top_journals.csv
+│   │
+│   └── report_task4.md           # raport końcowy
+│
+├── src/
+│   ├── pm25/
+│   │   └── run_pm25_year_from_all.py
+│   │
+│   ├── literature/
+│   │   └── pubmed_fetch.py
+│   │
+│   └── report/
+│       └── build_report_task4.py
+│
+├── tests/
+│   ├── test_io_clean.py
+│   ├── test_metrics.py
+│   └── test_task4.py
+│
+├── io_clean.py
+├── metrics.py
+├── viz.py
+├── Snakefile_task4
+├── PM25_all_years.csv
+└── README.md
+
 ```
 
-**Zadania**
+**Dane PM2.5**
+Analiza oparta jest na zbiorze: PM25_all_years.csv, zawierającym dane pomiarowe PM2.5 z wielu lat i stacji pomiarowych.
+Pipeline:
+1)filtruje dane dla wybranego roku,
+2)oblicza dobowe średnie,
+3)liczy dni przekroczenia norm WHO,
+4)zapisuje wyniki do katalogu results/pm25/{rok}/
 
+**Analiza literatury (PubMed)**
 
-**Zadanie 1 – Wczytanie i czyszczenie danych**
+Pipeline automatycznie:
+- pobiera publikacje z PubMed,
+- filtruje je według zapytań konfiguracyjnych,
+- zapisuje listę artykułów,
+- generuje statystyki roczne,
+- wyznacza najczęściej występujące czasopisma.
 
-- import danych z plików CSV
+Wyniki zapisywane są do: results/literature/{rok}/
 
-- usunięcie braków i błędnych rekordów
+**Konfiguracja**
+Pipeline sterowany jest plikiem: config/task4.yaml. Przykład:
+'''
+years: [2021, 2024]
 
-- konwersja kolumny daty do typu datetime
+cities:
+  - Warszawa
+  - Katowice
 
-**Zadanie 2 – Obliczanie średnich**
+pm25:
+  who_daily_limit: 15
+  input_csv: PM25_all_years.csv
 
-Obliczanie średnich ze wzorem:
-
-   $\overline{x} = \frac{1}{n}\sum_{i=1}^n x_i$
-
-- W kodzie liczone są średnie dobowe oraz miesięczne
-
-- rysowanie liniowych wykresów
-
-- porównania lat i lokalizacji zgodnie z treścią zadania
-
+pubmed:
+  retmax: 100
+  queries:
+    - "(PM2.5 OR particulate matter) AND (health OR mortality)"
+'''
 **Zadanie 3 – Wizualizacja**
 
 Wykonanie heatmap miesięcznych średnich dla miast
