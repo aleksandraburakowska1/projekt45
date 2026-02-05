@@ -73,8 +73,7 @@ Wyniki zapisywane są do: results/literature/{rok}/
 
 **Konfiguracja**
 Pipeline sterowany jest plikiem: config/task4.yaml. Przykład:
-'''
-years: [2021, 2024]
+```years: [2021, 2024]
 
 cities:
   - Warszawa
@@ -88,7 +87,8 @@ pubmed:
   retmax: 100
   queries:
     - "(PM2.5 OR particulate matter) AND (health OR mortality)"
-'''
+
+```
 **Zadanie 3 – Wizualizacja**
 
 Wykonanie heatmap miesięcznych średnich dla miast
