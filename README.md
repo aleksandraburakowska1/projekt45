@@ -91,11 +91,18 @@ pubmed:
 
 ```
 Zmiana lat lub miast nie wymaga zmiany kodu — wystarczy edycja pliku YAML.
+
 **Uruchomienie pipeline**
+
 Instalacja zależności:
 ```
 pip install -r requirements.txt
 ```
+Uruchomienie:
+```
+pip install -r requirements.txt
+```
+
 
 **Zadanie 4 – Przekroczenia normy:**
 - zliczanie dni z przekroczeniem dopuszczalnej wartości i liczby przekroczeń dla wybranych stacji
