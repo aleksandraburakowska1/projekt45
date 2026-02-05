@@ -1,0 +1,63 @@
+Assuming unrestricted shared filesystem usage.
+host: 4a8de2adf24d
+Building DAG of jobs...
+Using shell: /usr/bin/bash
+Provided cores: 1 (use --cores to define parallelism)
+Rules claiming more threads will be scaled down.
+Job stats:
+job             count
+------------  -------
+all                 1
+pm25_year           1
+pubmed_year         1
+report_task4        1
+total               4
+
+Select jobs to execute...
+Execute 1 jobs...
+[Thu Feb  5 22:38:18 2026]
+localrule pm25_year:
+    output: results/pm25/2018/daily_means.csv, results/pm25/2018/exceedance_days.csv
+    jobid: 1
+    reason: Missing output files: results/pm25/2018/exceedance_days.csv, results/pm25/2018/daily_means.csv
+    wildcards: year=2018
+    resources: tmpdir=/tmp
+Select jobs to execute...
+[Thu Feb  5 22:38:20 2026]
+Finished jobid: 1 (Rule: pm25_year)
+1 of 4 steps (25%) done
+Execute 1 jobs...
+[Thu Feb  5 22:38:20 2026]
+localrule pubmed_year:
+    output: results/literature/2018/pubmed_papers.csv, results/literature/2018/summary_by_year.csv, results/literature/2018/top_journals.csv
+    jobid: 3
+    reason: Missing output files: results/literature/2018/top_journals.csv, results/literature/2018/summary_by_year.csv, results/literature/2018/pubmed_papers.csv
+    wildcards: year=2018
+    resources: tmpdir=/tmp
+[Thu Feb  5 22:38:22 2026]
+Finished jobid: 3 (Rule: pubmed_year)
+2 of 4 steps (50%) done
+Select jobs to execute...
+Execute 1 jobs...
+[Thu Feb  5 22:38:22 2026]
+localrule report_task4:
+    input: results/pm25/2018/exceedance_days.csv, results/pm25/2024/exceedance_days.csv, results/literature/2018/pubmed_papers.csv, results/literature/2024/pubmed_papers.csv, config/task4.yaml
+    output: results/report_task4.md
+    jobid: 5
+    reason: Updated input files: config/task4.yaml; Input files updated by another job: results/pm25/2018/exceedance_days.csv, results/literature/2018/pubmed_papers.csv
+    resources: tmpdir=/tmp
+[Thu Feb  5 22:38:23 2026]
+Finished jobid: 5 (Rule: report_task4)
+3 of 4 steps (75%) done
+Select jobs to execute...
+Execute 1 jobs...
+[Thu Feb  5 22:38:23 2026]
+localrule all:
+    input: results/pm25/2018/daily_means.csv, results/pm25/2024/daily_means.csv, results/pm25/2018/exceedance_days.csv, results/pm25/2024/exceedance_days.csv, results/literature/2018/pubmed_papers.csv, results/literature/2024/pubmed_papers.csv, results/literature/2018/summary_by_year.csv, results/literature/2024/summary_by_year.csv, results/literature/2018/top_journals.csv, results/literature/2024/top_journals.csv, results/report_task4.md
+    jobid: 0
+    reason: Input files updated by another job: results/pm25/2018/exceedance_days.csv, results/report_task4.md, results/literature/2018/top_journals.csv, results/pm25/2018/daily_means.csv, results/literature/2018/pubmed_papers.csv, results/literature/2018/summary_by_year.csv
+    resources: tmpdir=/tmp
+[Thu Feb  5 22:38:23 2026]
+Finished jobid: 0 (Rule: all)
+4 of 4 steps (100%) done
+Complete log(s): /content/Maly_projekt3_Ola_i_Michal/.snakemake/log/2026-02-05T223816.489289.snakemake.log

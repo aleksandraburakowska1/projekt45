@@ -1,0 +1,16 @@
+years:
+- 2018
+- 2024
+cities:
+- Warszawa
+- Katowice
+pm25:
+  who_daily_limit: 15
+  pollutant: PM25
+  resolution: 1g
+  cache_dir: data/raw
+pubmed:
+  entrez_email: olciaburakowska1@gmail.com
+  retmax: 100
+  queries:
+  - (PM2.5 OR "particulate matter") AND (health OR mortality)

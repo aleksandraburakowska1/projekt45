@@ -1,0 +1,53 @@
+configfile: "config/task4.yaml"
+
+YEARS = config["years"]
+
+wildcard_constraints:
+    year = r"\d{4}"
+
+rule all:
+    input:
+        expand("results/pm25/{year}/daily_means.csv", year=YEARS),
+        expand("results/pm25/{year}/exceedance_days.csv", year=YEARS),
+        expand("results/literature/{year}/pubmed_papers.csv", year=YEARS),
+        expand("results/literature/{year}/summary_by_year.csv", year=YEARS),
+        expand("results/literature/{year}/top_journals.csv", year=YEARS),
+        "results/report_task4.md"
+
+rule pm25_year:
+    output:
+        daily="results/pm25/{year}/daily_means.csv",
+        exceed="results/pm25/{year}/exceedance_days.csv"
+    params:
+        cfg="config/task4.yaml"
+    shell:
+        r"""
+        python src/pm25/run_pm25_year_from_all.py --year {wildcards.year} --config {params.cfg}
+        """
+
+rule pubmed_year:
+    output:
+        papers="results/literature/{year}/pubmed_papers.csv",
+        summary="results/literature/{year}/summary_by_year.csv",
+        journals="results/literature/{year}/top_journals.csv"
+    params:
+        cfg="config/task4.yaml",
+        queries=lambda wc: tuple(config.get("pubmed", {}).get("queries", [])),
+        retmax=lambda wc: int(config.get("pubmed", {}).get("retmax", 200)),
+        email=lambda wc: str(config.get("pubmed", {}).get("entrez_email", "")),
+    shell:
+        r"""
+        python src/literature/pubmed_fetch.py --year {wildcards.year} --config {params.cfg}
+        """
+
+rule report_task4:
+    input:
+        pm=expand("results/pm25/{year}/exceedance_days.csv", year=YEARS),
+        lit=expand("results/literature/{year}/pubmed_papers.csv", year=YEARS),
+        cfg="config/task4.yaml"
+    output:
+        "results/report_task4.md"
+    shell:
+        r"""
+        python src/report/build_report_task4.py --config {input.cfg} --out {output}
+        """

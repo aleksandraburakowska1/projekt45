@@ -1,0 +1,49 @@
+Assuming unrestricted shared filesystem usage.
+host: 4a8de2adf24d
+Building DAG of jobs...
+Using shell: /usr/bin/bash
+Provided cores: 1 (use --cores to define parallelism)
+Rules claiming more threads will be scaled down.
+Job stats:
+job          count
+---------  -------
+all              1
+pm25_year        2
+total            3
+
+Select jobs to execute...
+Execute 1 jobs...
+[Thu Feb  5 22:33:35 2026]
+localrule pm25_year:
+    output: results/pm25/2024/daily_means.csv, results/pm25/2024/exceedance_days.csv
+    jobid: 2
+    reason: Missing output files: results/pm25/2024/exceedance_days.csv, results/pm25/2024/daily_means.csv
+    wildcards: year=2024
+    resources: tmpdir=/tmp
+Select jobs to execute...
+[Thu Feb  5 22:33:37 2026]
+Finished jobid: 2 (Rule: pm25_year)
+1 of 3 steps (33%) done
+Execute 1 jobs...
+[Thu Feb  5 22:33:37 2026]
+localrule pm25_year:
+    output: results/pm25/2021/daily_means.csv, results/pm25/2021/exceedance_days.csv
+    jobid: 1
+    reason: Missing output files: results/pm25/2021/exceedance_days.csv, results/pm25/2021/daily_means.csv
+    wildcards: year=2021
+    resources: tmpdir=/tmp
+[Thu Feb  5 22:33:39 2026]
+Finished jobid: 1 (Rule: pm25_year)
+2 of 3 steps (67%) done
+Select jobs to execute...
+Execute 1 jobs...
+[Thu Feb  5 22:33:39 2026]
+localrule all:
+    input: results/pm25/2021/daily_means.csv, results/pm25/2024/daily_means.csv, results/pm25/2021/exceedance_days.csv, results/pm25/2024/exceedance_days.csv
+    jobid: 0
+    reason: Input files updated by another job: results/pm25/2024/exceedance_days.csv, results/pm25/2021/exceedance_days.csv, results/pm25/2024/daily_means.csv, results/pm25/2021/daily_means.csv
+    resources: tmpdir=/tmp
+[Thu Feb  5 22:33:39 2026]
+Finished jobid: 0 (Rule: all)
+3 of 3 steps (100%) done
+Complete log(s): /content/Maly_projekt3_Ola_i_Michal/.snakemake/log/2026-02-05T223330.458307.snakemake.log
