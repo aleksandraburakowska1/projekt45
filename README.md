@@ -52,7 +52,8 @@ Projekt realizuje analizę stężeń pyłu zawieszonego PM2.5 w Polsce oraz łą
 
 ```
 
-**Dane PM2.5**
+**Dane PM2.5:**
+
 Analiza oparta jest na zbiorze: PM25_all_years.csv, zawierającym dane pomiarowe PM2.5 z wielu lat i stacji pomiarowych.
 Pipeline:
 1)filtruje dane dla wybranego roku,
