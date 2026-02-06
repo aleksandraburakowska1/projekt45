@@ -1,3 +1,5 @@
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/aleksandraburakowska1/projekt45/blob/main/projekt_1_student.ipynb)
+
 **Analiza PM2.5 w Polsce – pipeline danych środowiskowych i literaturowych**
 
 Projekt realizuje analizę stężeń pyłu zawieszonego PM2.5 w Polsce oraz łączy ją z analizą publikacji naukowych dotyczących wpływu zanieczyszczeń powietrza na zdrowie.Całość została zautomatyzowana przy pomocy Snakemake, co pozwala łatwo odtwarzać wyniki dla kolejnych lat bez ręcznego przetwarzania danych. Pipeline wykonuje:
