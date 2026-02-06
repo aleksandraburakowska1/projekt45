@@ -116,6 +116,10 @@ powoduje, że Snakemake wykrywa zmiany na podstawie zawartości plików, a nie t
 - pipeline nie uruchamia się niepotrzebnie,
 - zmiana danych zawsze wymusza przeliczenie wyników,
 - wyniki są bardziej powtarzalne.
+**Testy:**
+  
+  Test sprawdza normalizację rekordów publikacji, czyli czy funkcja poprawnie sortuje rekordy i czy usuwane są zbędne spacje w danych.
+
 
 **Autor:**
 
