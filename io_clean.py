@@ -2,17 +2,9 @@ import requests
 import zipfile
 import io, os
 import pandas as pd
+from pathlib import Path
 
 gios_archive_url = "https://powietrze.gios.gov.pl/pjp/archives/downloadFile/"
-
-
-from pathlib import Path
-import requests
-
-GIOS_BASE = "https://powietrze.gios.gov.pl/pjp/archives/downloadFile/"
-
-import requests
-from pathlib import Path
 
 GIOS_BASE = "https://powietrze.gios.gov.pl/pjp/archives/downloadFile/"
 
@@ -271,5 +263,6 @@ def dodaj_multiindex(df: pd.DataFrame, mapa_kod_miasto: dict) -> pd.DataFrame:
     df2.columns = pd.MultiIndex.from_tuples(nowe_kolumny,
                                             names=["Miejscowość", "Kod stacji"])
     return df2
+
 
 
