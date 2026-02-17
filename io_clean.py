@@ -6,26 +6,39 @@ import pandas as pd
 gios_archive_url = "https://powietrze.gios.gov.pl/pjp/archives/downloadFile/"
 
 
-# funkcja do ściągania podanego archiwum
-def download_gios_archive(year, gios_id, filename):
-    # Pobranie archiwum ZIP do pamięci
-    url = f"{gios_archive_url}{gios_id}"
-    response = requests.get(url)
-    response.raise_for_status()  # jeśli błąd HTTP, zatrzymaj
+from pathlib import Path
+import requests
 
-    # Otwórz zip w pamięci
-    with zipfile.ZipFile(io.BytesIO(response.content)) as z:
-        # znajdź właściwy plik z PM2.5
-        if not filename:
-            print(f"Błąd: nie znaleziono {filename}.")
-        else:
-            # wczytaj plik do pandas
-            with z.open(filename) as f:
-                try:
-                    df = pd.read_excel(f, header=None)
-                except Exception as e:
-                    print(f"Błąd przy wczytywaniu {year}: {e}")
-    return df
+GIOS_BASE = "https://powietrze.gios.gov.pl/pjp/archives/downloadFile/"
+
+def download_gios_archive_cached(year: int, gios_id: int, cache_dir: str = "data/raw") -> Path:
+    """
+    Pobiera archiwum GIOŚ tylko jeśli nie ma go lokalnie.
+    Zwraca ścieżkę do pobranego pliku ZIP.
+    """
+    cache_dir = Path(cache_dir)
+    out_dir = cache_dir / str(year)
+    out_dir.mkdir(parents=True, exist_ok=True)
+
+    zip_path = out_dir / f"{year}_gios_{gios_id}.zip"
+    if zip_path.exists() and zip_path.stat().st_size > 0:
+        return zip_path  # cache hit ✅
+
+    url = f"{GIOS_BASE}{gios_id}"
+    r = requests.get(url, stream=True, timeout=60)
+    r.raise_for_status()
+
+    with open(zip_path, "wb") as f:
+        for chunk in r.iter_content(chunk_size=1024 * 1024):
+            if chunk:
+                f.write(chunk)
+
+    return zip_path
+
+def read_pm25_from_zip(zip_path: Path, xlsx_name: str) -> pd.DataFrame:
+    with zipfile.ZipFile(zip_path) as z:
+        with z.open(xlsx_name) as f:
+            return pd.read_excel(f, header=None)
 
 
 def build_kod2miasto(dfmeta_raw: pd.DataFrame) -> dict:
@@ -254,3 +267,4 @@ def dodaj_multiindex(df: pd.DataFrame, mapa_kod_miasto: dict) -> pd.DataFrame:
     df2.columns = pd.MultiIndex.from_tuples(nowe_kolumny,
                                             names=["Miejscowość", "Kod stacji"])
     return df2
+
