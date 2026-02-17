@@ -11,29 +11,33 @@ import requests
 
 GIOS_BASE = "https://powietrze.gios.gov.pl/pjp/archives/downloadFile/"
 
-def download_gios_archive_cached(year: int, gios_id: int, cache_dir: str = "data/raw") -> Path:
-    """
-    Pobiera archiwum GIOŚ tylko jeśli nie ma go lokalnie.
-    Zwraca ścieżkę do pobranego pliku ZIP.
-    """
-    cache_dir = Path(cache_dir)
-    out_dir = cache_dir / str(year)
-    out_dir.mkdir(parents=True, exist_ok=True)
+import requests
+from pathlib import Path
 
-    zip_path = out_dir / f"{year}_gios_{gios_id}.zip"
-    if zip_path.exists() and zip_path.stat().st_size > 0:
-        return zip_path  # cache hit ✅
+GIOS_BASE = "https://powietrze.gios.gov.pl/pjp/archives/downloadFile/"
+
+def download_gios_archive(year, gios_id, cache_dir="data/raw"):
+    cache_dir = Path(cache_dir) / str(year)
+    cache_dir.mkdir(parents=True, exist_ok=True)
+
+    zip_path = cache_dir / f"{year}.zip"
+
+    # jeśli już mamy plik → nie pobieramy
+    if zip_path.exists():
+        print(f"Cache hit: {zip_path}")
+        return zip_path
+
+    print(f"Pobieram dane dla {year}...")
 
     url = f"{GIOS_BASE}{gios_id}"
-    r = requests.get(url, stream=True, timeout=60)
+    r = requests.get(url)
     r.raise_for_status()
 
     with open(zip_path, "wb") as f:
-        for chunk in r.iter_content(chunk_size=1024 * 1024):
-            if chunk:
-                f.write(chunk)
+        f.write(r.content)
 
     return zip_path
+
 
 def read_pm25_from_zip(zip_path: Path, xlsx_name: str) -> pd.DataFrame:
     with zipfile.ZipFile(zip_path) as z:
@@ -267,4 +271,5 @@ def dodaj_multiindex(df: pd.DataFrame, mapa_kod_miasto: dict) -> pd.DataFrame:
     df2.columns = pd.MultiIndex.from_tuples(nowe_kolumny,
                                             names=["Miejscowość", "Kod stacji"])
     return df2
+
 
