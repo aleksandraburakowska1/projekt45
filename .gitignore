@@ -4,3 +4,4 @@ __pycache__/
 .ipynb_checkpoints/
 *.pyc
 PM25_all_years.csv
+data/
